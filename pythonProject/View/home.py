@@ -16,7 +16,7 @@ class System(Toplevel):
         Toplevel.__init__(self)
         self.geometry("1300x900")
         self.title("Library Management System")
-        self.resizable(True,True)
+        self.resizable(False,False)
 
         #==========================================================
 
@@ -139,11 +139,11 @@ class System(Toplevel):
         def bookinfo(evt):
             con = Mysql.Connect()
             cur = con.cursor()
-            value = str(self.management_box.get(self.management_box.curselection()))
-            id = value.split('-')[0]
+            self.value = str(self.management_box.get(self.management_box.curselection()))
+            self.id = self.value.split('-')[0]
             self.list_details.delete(0, 'end')
 
-            cur.execute("SELECT * FROM books WHERE bookid='" + id + "'")
+            cur.execute("SELECT * FROM books WHERE bookid='" + self.id + "'")
             book_info = cur.fetchall()
             self.list_details.insert(0, 'Book Name:' + book_info[0][1])
             self.list_details.insert(1, 'Author:' + book_info[0][2])

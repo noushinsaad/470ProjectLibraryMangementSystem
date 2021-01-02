@@ -1,4 +1,3 @@
-
 class users:
 
     def __init__(self):
@@ -10,9 +9,7 @@ class users:
     __lname=""
     __email=""
     __contact=""
-    __date=""
-    __address=""
-    __message=""
+
     __bookid=0
     __bookname=""
     __author=""
@@ -37,16 +34,11 @@ class users:
         self.__email=param
     def setContact(self,param):
         self.__contact=param
-    def setDate(self,param):
-        self.__date=param
-    def setAddress(self,param):
-        self.__address=param
+
     def setUserid(self,param):
         self.__userid=param
     def setDateRegistered(self,param):
         self.__dateRegistered=param
-    def setMessage(self,param):
-        self.__message=param
     def setBookid(self,param):
         self.__bookid=param
     def setBookname(self,param):
@@ -75,14 +67,9 @@ class users:
         return self.__email
     def getContact(self):
         return self.__contact
-    def getDate(self):
-        return self.__date
-    def getAddress(self):
-        return self.__address
+
     def getUserid(self):
         return self.__userid
-    def getMessage(self):
-        return self.__message
     def getRegistered(self):
         return self.__dateRegistered
     def getBookid(self):

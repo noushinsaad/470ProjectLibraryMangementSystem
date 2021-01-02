@@ -8,30 +8,29 @@ class account:
 
     def __init__(self):
         self.__connection = Mysql.Connect()
+        self.cur = self.__connection.cursor()
     def Login(self,users):
         if self.__isvalidLogin(users):
             if self.__isAuthentic(users):
                 self.__Authorize(users)
             else:
-                users.setMessage("Incorrect User Name or Password!!!")
-                messagebox.showerror("Library Management System", users.getMessage())
+
+                messagebox.showerror("Library Management System", "Incorrect User Name or Password!!!")
         else:
-            users.setMessage("Please write a user name and password")
-            messagebox.showerror("Library Management System", users.getMessage())
+
+            messagebox.showerror("Library Management System", "Please write a user name and password")
     def __isvalidLogin(self,users):
         if users.getUsername()!="" and users.getPassword()!="":
             return True
         return False
     def __isAuthentic(self,users):
-        cursor=self.__connection.cursor()
-        cursor.execute("SELECT userid FROM admin WHERE username='"+users.getUsername()+"' AND password='"+users.getPassword()+"'")
-        record=cursor.fetchone()
+
+        self.cur.execute("SELECT userid FROM admin WHERE username='"+users.getUsername()+"' AND password='"+users.getPassword()+"'")
+        record=self.cur.fetchone()
         if record!=None:
             return True
         return False
     def __Authorize(self,users):
-        #users.setMessage(users.getUsername()+" is logged in..... ")
-        #messagebox.showinfo("Library Management System", users.getMessage())
         p=a.System()
         p.showsummary()
         p.showbooks()
@@ -44,17 +43,19 @@ class account:
         published=users.getPublished()
         publisher=users.getPublisher()
         if (bookname != '' and author != '' and edition != '' and published != '' and publisher != ''):
-            cursor = self.__connection.cursor()
             try:
                 query = "INSERT INTO books (`bookname`, `author`, `edition`, `published`, `publisher`) VALUES(%s,%s,%s,%s,%s)"
-                cursor.execute(query, (bookname, author, edition, published, publisher))
+                self.cur.execute(query, (bookname, author, edition, published, publisher))
                 self.__connection.commit()
                 messagebox.showinfo('Success', 'Book has been saved successfully', icon='info')
+                return True
             except:
                 messagebox.showerror('Error', 'Transaction failed!', icon='warning')
+                return False
 
         else:
             messagebox.showerror('Error', 'All fields are required!', icon='warning')
+            return False
 
     def addMember(self,users):
         """
@@ -69,10 +70,9 @@ class account:
         ps=users.getPassword()
 
         if (fname != '' and lname != '' and uname != '' and phone != '' and em != '' and rg != '' and ps != ''):
-            cursor = self.__connection.cursor()
             try:
                 query = "INSERT INTO member(`username`, `password`, `fname`, `lname`, `email`, `contact`, `dateregistered`) VALUES (%s,%s,%s,%s,%s,%s,%s)"
-                cursor.execute(query, (uname,ps,fname,lname,em,phone,rg))
+                self.cur.execute(query, (uname,ps,fname,lname,em,phone,rg))
                 self.__connection.commit()
                 messagebox.showinfo('Success', 'Member is added!', icon='info')
             except:
@@ -82,15 +82,14 @@ class account:
             messagebox.showerror('Error', 'All fields are required!', icon='warning')
 
     def Issuebook(self,users):
-        cur = self.__connection.cursor()
         bid=users.getBookid()
         uid=users.getUserid()
         if (bid != '' and uid!= ''):
             try:
                 query = "INSERT INTO issuedbooks(bookid,userid)VALUES(%s,%s)"
-                cur.execute(query, (bid, uid))
+                self.cur.execute(query, (bid, uid))
                 self.__connection.commit()
-                cur.execute("UPDATE books SET book_status=1 WHERE bookid=%s",(bid,))
+                self.cur.execute("UPDATE books SET book_status=1 WHERE bookid=%s",(bid,))
                 self.__connection.commit()
                 messagebox.showinfo("Success","Book has been issued successfully!",icon='info')
             except:
@@ -100,26 +99,24 @@ class account:
 
 
     def Returnbook(self,users):
-        cur = self.__connection.cursor()
         bid = users.getBookid()
         if (bid != ''):
             try:
-                cur.execute("DELETE from issuedbooks where bookid='"+users.getBookid()+"'")
+                self.cur.execute("DELETE from issuedbooks where bookid='"+users.getBookid()+"'")
                 self.__connection.commit()
-                cur.execute("UPDATE books SET book_status=0 WHERE bookid=%s",(users.getBookid(),))
+                self.cur.execute("UPDATE books SET book_status=0 WHERE bookid=%s",(users.getBookid(),))
                 self.__connection.commit()
                 messagebox.showinfo("Success","Book has been returned successfully!",icon='info')
             except:
                 messagebox.showerror('Error','Transaction not commit',icon='warning')
 
     def Deletebook(self,users):
-        cur = self.__connection.cursor()
         bid = users.getBookid()
         if (bid != ''):
             try:
-                cur.execute("DELETE from books where bookid='" + users.getBookid() + "'")
+                self.cur.execute("DELETE from books where bookid='" + users.getBookid() + "'")
                 self.__connection.commit()
-                cur.execute("DELETE from issuedbooks where bookid='" + users.getBookid() + "'")
+                self.cur.execute("DELETE from issuedbooks where bookid='" + users.getBookid() + "'")
                 self.__connection.commit()
                 messagebox.showinfo("Success", "Book has been Deleted successfully!", icon='info')
             except:
@@ -127,11 +124,12 @@ class account:
 
 
     def Removemember(self,users):
-        cur = self.__connection.cursor()
         uid = users.getUserid()
         if (uid != ''):
             try:
-                cur.execute("DELETE from member where userid='" + users.getUserid() + "'")
+                self.cur.execute("DELETE from member where userid='" + users.getUserid() + "'")
+                self.__connection.commit()
+                self.cur.execute("DELETE from issuebooks where userid='" + users.getUserid() + "'")
                 self.__connection.commit()
                 messagebox.showinfo("Success", "Member has been Removed successfully!", icon='info')
             except:
