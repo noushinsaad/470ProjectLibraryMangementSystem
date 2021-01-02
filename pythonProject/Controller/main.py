@@ -7,8 +7,8 @@ class Library:
     def __init__(self,root):
         self.root = root
         self.root.title("Library Management System")
-        self.root.geometry("1360x900")     # "_fullscreen",True
-        self.root.resizable(True, True)
+        self.root.geometry("900x500")
+        self.root.resizable(False, False)
         self.root.configure(bg='cadetblue')
 
 
@@ -16,10 +16,10 @@ class Library:
         MainFrame = Frame(self.root, bg='cadetblue')
         MainFrame.grid()
 
-        TitleFrame = Frame(MainFrame, bd=10, width=1360, padx=60, relief=RIDGE,)
+        TitleFrame = Frame(MainFrame, bd=10, width=850, padx=60, relief=RIDGE,)
         TitleFrame.pack(side=TOP)
 
-        self.lblTitle = Label(TitleFrame, width=38, font=('arial', 40, 'bold'), text="Admin Log in")
+        self.lblTitle = Label(TitleFrame, width=25, font=('arial', 40, 'bold'), text="Admin Log in")
         self.lblTitle.grid()
 
         ButtonFrame = Frame(MainFrame, bd=10, width=1300, height=20, relief=RIDGE)
@@ -28,11 +28,9 @@ class Library:
         DataFrame = Frame(MainFrame, bd=10, width=1300, height=400, relief=RIDGE)
         DataFrame.pack(side=BOTTOM)
 
-        DataFrameLEFTCover = LabelFrame(DataFrame, bd=10, width=800, height=300, relief=RIDGE, bg='cadetblue',
-                                        font=('arial', 12, 'bold'), text="Log in", )
-        DataFrameLEFTCover.pack(side=LEFT, padx=10)
 
-        DataFrameLEFT = Frame(DataFrameLEFTCover, bd=10, width=800, height=300, padx=13, pady=2, relief=RIDGE)
+
+        DataFrameLEFT = Frame(DataFrame, bd=10, width=800, height=300, padx=13, pady=2, relief=RIDGE)
         DataFrameLEFT.pack(side=TOP)
 
 

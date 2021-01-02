@@ -8,7 +8,7 @@ class StoreMember(Toplevel):
         Toplevel.__init__(self)
         self.geometry("900x900")
         self.title("Enter Member")
-        self.resizable(True,True)
+        self.resizable(False,False)
 
         #========================Frame================================
 

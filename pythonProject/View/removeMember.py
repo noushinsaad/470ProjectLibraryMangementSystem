@@ -41,10 +41,10 @@ class RemoveMember(Toplevel):
 
 
 
-        savebutton = Button(self.bodyframe, text='Remove', command=self.return_book)
+        savebutton = Button(self.bodyframe, text='Remove', command=self.remove_member)
         savebutton.place(x=400 , y=45)
 
-    def return_book(self):
+    def remove_member(self):
         u.setUserid(self.txt_book_combo.get().split('-')[0])
         ib = m.account()
         ib.Removemember(u)
